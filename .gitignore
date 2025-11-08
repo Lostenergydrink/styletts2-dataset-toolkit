@@ -1,0 +1,123 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# PyTorch
+*.pth
+*.pt
+*.ckpt
+checkpoints/
+
+# Gradio
+flagged/
+
+# Models (too large for git)
+models/
+*.safetensors
+*.bin
+
+# Outputs
+outputs/
+stem-outputs/
+*.wav
+*.mp3
+*.flac
+*.m4a
+*.ogg
+
+# Datasets
+datasets/
+training-data/
+voice-samples/
+
+# Logs
+logs/
+log_dir/
+*.log
+tensorboard_logs/
+
+# Cache
+.cache/
+*.cache
+__pycache__/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Windows
+$RECYCLE.BIN/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.old
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Environment variables
+.env
+.env.local
+
+# FFmpeg
+ffmpeg/
+ffprobe/
+
+# Hugging Face cache
+.huggingface/
+transformers_cache/
+
+# NLTK data
+nltk_data/
+
+# Package files
+*.tar.gz
+*.zip
+*.rar
+*.7z
+
+# Exclude large audio files but keep structure
+*.wav
+*.mp3
+*.flac
+!examples/*.wav
+!examples/*.mp3
+
+# Keep example files small
+examples/audio/
+examples/outputs/

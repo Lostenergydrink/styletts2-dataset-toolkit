@@ -1,0 +1,32 @@
+# Stem Separation Requirements
+# Install with: pip install -r requirements.txt
+#
+# =====================================================
+# IMPORTANT: Uses isolated venv due to dependency conflicts
+# =====================================================
+# audio-separator requires numpy>=2.0 and scipy>=1.13
+# SD Forge requires numpy==1.26.2 and scipy==1.11.4
+# These are INCOMPATIBLE - hence the separate environment
+# =====================================================
+
+# PyTorch (CUDA 12.1) - Install via index URL, not from requirements.txt
+# Run: pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
+# torch>=2.3.0+cu121
+# torchaudio>=2.3.0+cu121
+
+# Web interface
+gradio>=4.0.0
+
+# Audio processing
+librosa>=0.10.0
+soundfile>=0.12.1
+pydub>=0.25.1
+
+# Core stem separation tools
+demucs>=4.0.0
+audio-separator[gpu]>=0.18.0
+
+# Utilities
+tqdm
+numpy>=2.0.0
+scipy>=1.13.0

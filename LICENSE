@@ -1,0 +1,59 @@
+# MIT License
+
+Copyright (c) 2025 StyleTTS2 Dataset Toolkit Contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## Third-Party Licenses
+
+This project uses the following open-source projects:
+
+### Demucs
+- License: MIT
+- Repository: https://github.com/facebookresearch/demucs
+- Copyright (c) Meta Platforms, Inc.
+
+### StyleTTS2
+- License: MIT
+- Repository: https://github.com/yl4579/StyleTTS2
+- Copyright (c) 2023 Aaron (Yinghao) Li
+
+### Audio Separator
+- License: MIT
+- Repository: https://github.com/nomadkaraoke/python-audio-separator
+- Copyright (c) 2023 beveradb
+
+### Gradio
+- License: Apache License 2.0
+- Repository: https://github.com/gradio-app/gradio
+- Copyright (c) 2023 Gradio
+
+### Whisper
+- License: MIT
+- Repository: https://github.com/openai/whisper
+- Copyright (c) 2022 OpenAI
+
+### PyTorch
+- License: BSD-style License
+- Repository: https://github.com/pytorch/pytorch
+- Copyright (c) 2016- Meta Platforms, Inc. and affiliates
+
+All third-party components are used in accordance with their respective licenses.
