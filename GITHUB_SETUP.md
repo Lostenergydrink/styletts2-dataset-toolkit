@@ -36,8 +36,8 @@ git commit -m "Initial commit: StyleTTS2 Dataset Toolkit v1.0"
 ## 🔗 Link to GitHub
 
 ```powershell
-# Add remote (replace 'yourusername' with your GitHub username)
-git remote add origin https://github.com/yourusername/styletts2-dataset-toolkit.git
+# Add remote
+git remote add origin https://github.com/Lostenergydrink/styletts2-dataset-toolkit.git
 
 # Push to GitHub
 git branch -M main
@@ -70,7 +70,7 @@ Features enhanced stem separation, batch processing, and dataset preparation too
 
 **Website:**
 ```
-https://github.com/yourusername/styletts2-dataset-toolkit
+https://github.com/Lostenergydrink/styletts2-dataset-toolkit
 ```
 
 ### Repository Details
@@ -124,7 +124,7 @@ See [INSTALLATION.md](docs/INSTALLATION.md)
 
 Quick install:
 ```powershell
-git clone https://github.com/yourusername/styletts2-dataset-toolkit.git
+git clone https://github.com/Lostenergydrink/styletts2-dataset-toolkit.git
 cd styletts2-dataset-toolkit
 .\install.ps1
 ```
@@ -166,8 +166,8 @@ Add these to top of README.md:
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![CUDA](https://img.shields.io/badge/CUDA-12.1+-green.svg)](https://developer.nvidia.com/cuda-downloads)
-[![GitHub release](https://img.shields.io/github/release/yourusername/styletts2-dataset-toolkit.svg)](https://github.com/yourusername/styletts2-dataset-toolkit/releases)
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/styletts2-dataset-toolkit.svg)](https://github.com/yourusername/styletts2-dataset-toolkit/stargazers)
+[![GitHub release](https://img.shields.io/github/release/Lostenergydrink/styletts2-dataset-toolkit.svg)](https://github.com/Lostenergydrink/styletts2-dataset-toolkit/releases)
+[![GitHub stars](https://img.shields.io/github/stars/Lostenergydrink/styletts2-dataset-toolkit.svg)](https://github.com/Lostenergydrink/styletts2-dataset-toolkit/stargazers)
 ```
 
 ---
@@ -188,7 +188,7 @@ Then update `examples/README.md` with actual images.
 
 ## 🔄 Update README Links
 
-Replace `yourusername` with your actual GitHub username in:
+All links have been updated with the correct username.
 - `README.md`
 - All documentation links
 - Badge URLs

@@ -48,7 +48,7 @@ See [INSTALLATION.md](docs/INSTALLATION.md) for detailed setup instructions.
 **Quick version:**
 ```powershell
 # 1. Clone repository
-git clone https://github.com/yourusername/styletts2-dataset-toolkit.git
+git clone https://github.com/Lostenergydrink/styletts2-dataset-toolkit.git
 cd styletts2-dataset-toolkit
 
 # 2. Install stem separation
@@ -260,8 +260,8 @@ Thank you to all the researchers and developers who made this toolkit possible!
 - [StyleTTS2 Fine-tuning Discussion](https://github.com/yl4579/StyleTTS2/discussions/128)
 
 ### Community
-- Report bugs: [GitHub Issues](https://github.com/yourusername/styletts2-dataset-toolkit/issues)
-- Request features: [GitHub Discussions](https://github.com/yourusername/styletts2-dataset-toolkit/discussions)
+- Report bugs: [GitHub Issues](https://github.com/Lostenergydrink/styletts2-dataset-toolkit/issues)
+- Request features: [GitHub Discussions](https://github.com/Lostenergydrink/styletts2-dataset-toolkit/discussions)
 
 ---
 

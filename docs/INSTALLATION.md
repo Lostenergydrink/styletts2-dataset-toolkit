@@ -44,7 +44,7 @@ Complete installation instructions for the StyleTTS2 Dataset Toolkit on Windows.
 **Option A: With Git**
 ```powershell
 cd E:\  # Or your preferred location
-git clone https://github.com/yourusername/styletts2-dataset-toolkit.git
+git clone https://github.com/Lostenergydrink/styletts2-dataset-toolkit.git
 cd styletts2-dataset-toolkit
 ```
 
