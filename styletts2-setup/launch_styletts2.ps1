@@ -88,7 +88,9 @@ if (-not $ffmpegFound) {
 Write-Host "Starting StyleTTS2 Web UI on port $SERVER_PORT..." -ForegroundColor Green
 Write-Host ""
 Write-Host "Once started, the web UI will be available at:" -ForegroundColor Yellow
-Write-Host "  http://localhost:$SERVER_PORT" -ForegroundColor Cyan
+Write-Host "  http://localhost:$SERVER_PORT (or next available port)" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "💡 If port $SERVER_PORT is busy, the script will try ports $($SERVER_PORT+1), $($SERVER_PORT+2), etc." -ForegroundColor Gray
 Write-Host ""
 Write-Host "Press Ctrl+C to stop the server." -ForegroundColor Yellow
 Write-Host ""

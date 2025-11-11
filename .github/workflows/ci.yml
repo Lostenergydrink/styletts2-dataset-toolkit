@@ -1,0 +1,146 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint:
+    name: Code Quality Checks
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name: Check for hardcoded paths
+      run: |
+        Write-Host "Checking for hardcoded paths..."
+        $hardcodedPaths = @(
+          "C:\\Users\\",
+          "E:\\AI\\",
+          "D:\\Users\\"
+        )
+        $found = $false
+        foreach ($path in $hardcodedPaths) {
+          $matches = Select-String -Path "*.py","*.ps1","*.bat" -Pattern $path -Recurse -ErrorAction SilentlyContinue
+          if ($matches) {
+            Write-Host "::error::Found hardcoded path: $path"
+            $matches | ForEach-Object { Write-Host "  - $($_.Path):$($_.LineNumber)" }
+            $found = $true
+          }
+        }
+        if ($found) {
+          exit 1
+        }
+        Write-Host "✓ No hardcoded paths found"
+    
+    - name: Validate .gitignore
+      run: |
+        Write-Host "Validating .gitignore..."
+        if (-not (Test-Path ".gitignore")) {
+          Write-Host "::error::.gitignore file is missing"
+          exit 1
+        }
+        Write-Host "✓ .gitignore exists"
+    
+    - name: Check file structure
+      run: |
+        Write-Host "Checking repository structure..."
+        $requiredFiles = @(
+          "README.md",
+          "LICENSE",
+          "CONTRIBUTING.md",
+          ".github/SECURITY.md"
+        )
+        foreach ($file in $requiredFiles) {
+          if (-not (Test-Path $file)) {
+            Write-Host "::warning::Required file missing: $file"
+          } else {
+            Write-Host "✓ $file exists"
+          }
+        }
+    
+    - name: Validate markdown files
+      run: |
+        Write-Host "Validating markdown files..."
+        $mdFiles = Get-ChildItem -Path . -Filter "*.md" -Recurse -File | Where-Object { $_.FullName -notmatch "\\\.git\\" }
+        foreach ($file in $mdFiles) {
+          $content = Get-Content $file.FullName -Raw
+          if ($content.Length -eq 0) {
+            Write-Host "::warning::Empty markdown file: $($file.FullName)"
+          }
+        }
+        Write-Host "✓ Markdown validation complete"
+    
+    - name: Check for secrets
+      run: |
+        Write-Host "Checking for potential secrets..."
+        $secretPatterns = @(
+          "api[_-]?key\s*=\s*['\"][^'\"]+['\"]",
+          "password\s*=\s*['\"][^'\"]+['\"]",
+          "token\s*=\s*['\"][^'\"]+['\"]",
+          "secret\s*=\s*['\"][^'\"]+['\"]"
+        )
+        $found = $false
+        foreach ($pattern in $secretPatterns) {
+          $matches = Select-String -Path "*.py","*.ps1","*.bat","*.md" -Pattern $pattern -Recurse -ErrorAction SilentlyContinue | Where-Object { $_.Path -notmatch "\\\.git\\" -and $_.Line -notmatch "#.*example|#.*placeholder" }
+          if ($matches) {
+            Write-Host "::warning::Potential secret found (may be false positive):"
+            $matches | ForEach-Object { Write-Host "  - $($_.Path):$($_.LineNumber)" }
+          }
+        }
+        Write-Host "✓ Secret check complete"
+
+  validate-scripts:
+    name: Validate Scripts
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name: Validate PowerShell scripts
+      run: |
+        Write-Host "Validating PowerShell scripts..."
+        $ps1Files = Get-ChildItem -Path . -Filter "*.ps1" -Recurse -File | Where-Object { $_.FullName -notmatch "\\\.git\\" }
+        foreach ($file in $ps1Files) {
+          Write-Host "Checking $($file.Name)..."
+          $errors = $null
+          $null = [System.Management.Automation.PSParser]::Tokenize((Get-Content $file.FullName -Raw), [ref]$errors)
+          if ($errors.Count -gt 0) {
+            Write-Host "::error::PowerShell syntax errors in $($file.Name):"
+            $errors | ForEach-Object { Write-Host "  - $($_.Message)" }
+            exit 1
+          }
+        }
+        Write-Host "✓ All PowerShell scripts are valid"
+    
+    - name: Validate batch files
+      run: |
+        Write-Host "Validating batch files..."
+        $batFiles = Get-ChildItem -Path . -Filter "*.bat" -Recurse -File | Where-Object { $_.FullName -notmatch "\\\.git\\" }
+        foreach ($file in $batFiles) {
+          Write-Host "✓ $($file.Name) exists"
+        }
+        Write-Host "✓ Batch file validation complete"
+
+
+
+
+
+
+
+

@@ -108,6 +108,184 @@ Common issues and solutions for the StyleTTS2 Dataset Toolkit.
 
 ## 🗣️ StyleTTS2 Issues
 
+### Port Already in Use (WebUI Won't Start)
+
+**Symptoms:**
+```
+OSError: Cannot find empty port in range: 7860-7860
+```
+Or WebUI fails to start with port conflict message.
+
+**Cause:** Another application is using port 7860 (default Gradio port).
+
+**Solutions:**
+
+**Option 1: Automatic port fallback** (Enhanced WebUI)
+The updated `styletts2_webui.py` will automatically try ports 7861, 7862, etc. if 7860 is busy.
+
+**Option 2: Use the port checker utility**
+```powershell
+# Check which process is using port 7860
+cd styletts2-setup
+.\check_port.ps1 -Port 7860
+
+# Kill the process using the port
+.\check_port.ps1 -Port 7860 -Kill
+
+# Check range of ports
+.\check_port.ps1 -Port 7860 -List
+```
+
+**Option 3: Manually specify different port**
+```powershell
+# Launch on different port
+python styletts2_webui.py --server_port 7865
+
+# Or edit launch_styletts2.ps1 and change:
+$SERVER_PORT = 7865
+```
+
+**Option 4: Find and kill process manually**
+```powershell
+# Find process using port 7860
+netstat -ano | findstr :7860
+
+# Kill process by PID (replace XXXX with actual PID)
+taskkill /PID XXXX /F
+```
+
+**Common culprits:**
+- Another Gradio app (Stable Diffusion WebUI, etc.)
+- Previous StyleTTS2 instance that didn't close properly
+- Jupyter Notebook
+- Other Python web servers
+
+---
+
+### Vocabulary Mismatch Error (Critical!)
+
+**Symptoms:**
+```
+RuntimeError: Error(s) in loading state_dict for TextEncoder:
+size mismatch for text_encoder.embedding.weight: copying a param with shape torch.Size([178, 512]) from checkpoint,
+the shape in current model is torch.Size([179, 512]).
+```
+
+**Cause:** Your dataset contains characters not in the allowed 178-token vocabulary (letters A-Z, a-z, and !'(),:;?)
+
+**Solutions:**
+
+1. **Auto-normalize your dataset** (Recommended):
+   ```powershell
+   python styletts2-setup\normalize_dataset.py path\to\train_list.txt
+   python styletts2-setup\normalize_dataset.py path\to\val_list.txt
+   ```
+   This automatically:
+   - Converts digits to words ("25" → "twenty five")
+   - Removes unsupported characters
+   - Preserves proper punctuation
+
+2. **Validate before training:**
+   ```powershell
+   python styletts2-setup\validate_dataset.py path\to\train_list.txt
+   ```
+   Shows exactly which lines contain invalid characters.
+
+3. **Manual fixes:**
+   - Remove numbers: "3 cats" → "three cats"
+   - Remove symbols: "10% off" → "ten percent off"
+   - Remove quotes: `"hello"` → `hello`
+   - Remove dashes, colons, semicolons (except allowed punctuation)
+
+**Allowed characters:** `A-Z a-z ! ' ( ) , : ; ? space`
+
+See [DATASET_REQUIREMENTS.md](DATASET_REQUIREMENTS.md) for complete details.
+
+### BERT Length Error
+
+**Symptoms:**
+```
+IndexError: index out of range in self
+Token indices sequence length is longer than the specified maximum sequence length for this model (XXX > 512)
+```
+
+**Cause:** Transcripts exceed 512 BERT tokens (~450 characters safe limit)
+
+**Solutions:**
+
+1. **Truncate long transcripts** (preserves sentence boundaries):
+   ```powershell
+   python styletts2-setup\normalize_dataset.py path\to\train_list.txt
+   ```
+   The normalize script automatically truncates at 450 characters while preserving complete sentences.
+
+2. **Manual truncation:**
+   - Edit transcripts to be under 450 characters
+   - Split long samples into multiple shorter clips
+
+3. **Check lengths before training:**
+   ```powershell
+   python styletts2-setup\validate_dataset.py path\to\train_list.txt
+   ```
+   Shows transcripts that are too long.
+
+**Best practice:** Keep transcripts between 3-30 seconds of audio (roughly 50-450 characters).
+
+### Windows DataLoader Process Bomb
+
+**Symptoms:**
+```
+RuntimeError: DataLoader worker (pid XXXX) exited unexpectedly
+[Errno 32] Broken pipe
+```
+Or system becomes unresponsive with hundreds of Python processes spawned.
+
+**Cause:** Windows can't fork processes like Linux. DataLoader workers cause process explosion.
+
+**Solution:**
+
+**Set `num_workers: 0` in config_ft.yml:**
+```yaml
+loader_params:
+  train:
+    batch_size: 16
+    num_workers: 0  # Must be 0 on Windows!
+  val:
+    batch_size: 8
+    num_workers: 0  # Must be 0 on Windows!
+```
+
+This is already fixed in the patched `meldataset.py` from this toolkit, which auto-detects Windows.
+
+### CUDA Device Errors
+
+**Symptoms:**
+```
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+```
+Or crashes when switching between CPU and GPU.
+
+**Cause:** Hardcoded `.to('cuda')` calls in StyleTTS2 code.
+
+**Solution:**
+
+**Use the patched files from this toolkit:**
+```powershell
+styletts2-setup\apply_patches.ps1
+```
+
+Or set `device: 'auto'` in config_ft.yml, which will:
+- Use CUDA if available
+- Fall back to CPU automatically
+- Handle device placement consistently
+
+The patches fix device handling in:
+- `train_finetune.py`
+- `models.py`
+- `Modules/hifigan.py`
+- `Modules/istftnet.py`
+- `Modules/discriminators.py`
+
 ### Model loading errors
 
 **Symptoms:**
@@ -117,22 +295,27 @@ Common issues and solutions for the StyleTTS2 Dataset Toolkit.
 
 **Solutions:**
 
-1. **Check installation:**
+1. **Check pretrained models exist:**
    ```powershell
-   cd styletts2-setup
-   .\.venv\Scripts\Activate.ps1
-   python -c "import styletts2; print('OK')"
+   Test-Path Models\LibriTTS\epochs_2nd_00020.pth
+   Test-Path Utils\ASR\epoch_00080.pth
+   Test-Path Utils\JDC\bst.t7
    ```
 
-2. **Reinstall StyleTTS2:**
-   ```powershell
-   pip uninstall styletts2
-   pip install styletts2
+2. **Verify paths in config_ft.yml:**
+   ```yaml
+   pretrained_model: Models/LibriTTS/epochs_2nd_00020.pth
+   ASR_path: Utils/ASR/epoch_00080.pth
+   F0_path: Utils/JDC/bst.t7
+   PLBERT_dir: Utils/PLBERT/
    ```
 
-3. **Check model paths:**
-   - Ensure models exist in `models/` directory
-   - Download manually if needed from Hugging Face
+3. **Download missing models** - see [STYLETTS2_INSTALLATION.md](STYLETTS2_INSTALLATION.md)
+
+4. **Check model file integrity:**
+   ```powershell
+   python -c "import torch; torch.load('Models/LibriTTS/epochs_2nd_00020.pth', map_location='cpu'); print('OK')"
+   ```
 
 ### Transcription failures
 
@@ -245,6 +428,103 @@ Common issues and solutions for the StyleTTS2 Dataset Toolkit.
    ```yaml
    grad_clip: 1.0
    ```
+
+### Missing num2words Module
+
+**Symptoms:**
+```
+ModuleNotFoundError: No module named 'num2words'
+```
+
+**Cause:** num2words is required for digit-to-word conversion but not installed.
+
+**Solution:**
+```powershell
+pip install num2words
+```
+
+Or reinstall all dependencies:
+```powershell
+pip install -r styletts2-setup\requirements.txt
+```
+
+### Corrupted Virtual Environment
+
+**Symptoms:**
+- `ImportError: DLL load failed while importing _ssl: Access is denied`
+- `WinError 5: Access denied` when importing modules
+- `.pyd` file errors
+- Random module import failures
+
+**Cause:** Windows file locking or antivirus interference corrupted compiled Python extensions.
+
+**Solution: Rebuild virtual environment from scratch**
+
+```powershell
+# Deactivate current environment
+deactivate
+
+# Delete corrupted venv
+Remove-Item -Recurse -Force .venv
+
+# Create fresh environment
+python -m venv .venv
+
+# Activate new environment
+.\.venv\Scripts\Activate.ps1
+
+# Reinstall dependencies in correct order
+# 1. PyTorch first (critical!)
+pip install torch==2.6.0+cu124 torchaudio==2.6.0+cu124 --index-url https://download.pytorch.org/whl/cu124
+
+# 2. Then everything else
+pip install -r styletts2-setup\requirements.txt
+
+# 3. Build monotonic_align extension
+cd monotonic_align
+python setup.py build_ext --inplace
+cd ..
+```
+
+**Prevention:**
+- Add Python directories to antivirus exclusions
+- Don't interrupt pip during installations
+- Use stable Python versions (3.10 or 3.11)
+
+### Train/Val Split Error
+
+**Symptoms:**
+```
+ValueError: train and validation data cannot be the same file
+```
+
+**Cause:** Using same manifest file for both train_data and val_data in config.
+
+**Solution:**
+
+Split your dataset into separate train and validation sets:
+
+```powershell
+# Read original manifest
+$lines = Get-Content dataset\all_data.txt
+
+# Calculate split (80% train, 20% val)
+$splitIndex = [int]($lines.Count * 0.8)
+
+# Create train set (first 80%)
+$lines[0..($splitIndex-1)] | Set-Content dataset\train_list.txt
+
+# Create val set (last 20%)
+$lines[$splitIndex..($lines.Count-1)] | Set-Content dataset\val_list.txt
+```
+
+Then update config_ft.yml:
+```yaml
+train_data: path/to/dataset/train_list.txt
+val_data: path/to/dataset/val_list.txt
+```
+
+**Best practice:** 80/20 or 90/10 split, minimum 50-100 samples in validation set.
 
 ### Poor model quality after training
 

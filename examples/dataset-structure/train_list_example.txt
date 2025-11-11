@@ -1,0 +1,10 @@
+audio_001.wav|The quick brown fox jumps over the lazy dog.|0
+audio_002.wav|She sells seashells by the seashore.|0
+audio_003.wav|How much wood would a woodchuck chuck if a woodchuck could chuck wood?|0
+audio_004.wav|Peter Piper picked a peck of pickled peppers.|0
+audio_005.wav|I scream, you scream, we all scream for ice cream!|0
+audio_006.wav|The rain in Spain stays mainly in the plain.|0
+audio_007.wav|To be or not to be, that is the question.|0
+audio_008.wav|Four score and seven years ago our fathers brought forth on this continent a new nation.|0
+audio_009.wav|It was the best of times, it was the worst of times.|0
+audio_010.wav|Call me Ishmael.|0

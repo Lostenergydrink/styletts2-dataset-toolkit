@@ -1,0 +1,123 @@
+# StyleTTS2 Dataset Toolkit - Complete Requirements
+# Installation instructions: See docs/STYLETTS2_INSTALLATION.md
+
+# ============================================================================
+# PyTorch with CUDA Support
+# ============================================================================
+# IMPORTANT: Install these FIRST, before other packages
+# For CUDA 12.4 (recommended - includes security fix for CVE-2025-32434):
+#   pip install torch==2.6.0+cu124 torchvision==0.21.0+cu124 torchaudio==2.6.0+cu124 --index-url https://download.pytorch.org/whl/cu124
+#
+# For CUDA 12.1 (if 12.4 not available):
+#   pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 torchaudio==2.5.1+cu121 --index-url https://download.pytorch.org/whl/cu121
+#
+# Minimum versions (adjust based on your CUDA version):
+torch>=2.6.0
+torchvision>=0.21.0
+torchaudio>=2.6.0
+
+# ============================================================================
+# Core ML Libraries
+# ============================================================================
+transformers>=4.57.1       # Requires PyTorch 2.6+ for security
+accelerate>=0.20.0
+huggingface-hub>=0.19.0
+
+# ============================================================================
+# Audio Processing
+# ============================================================================
+librosa>=0.10.0
+soundfile>=0.12.0
+resampy>=0.4.0
+pyworld>=0.3.0
+phonemizer>=3.2.0
+audioread>=3.0.0
+
+# ============================================================================
+# Text Processing & Normalization (CRITICAL)
+# ============================================================================
+num2words>=0.5.12          # CRITICAL: Converts digits to words for StyleTTS2 vocab
+sentencepiece>=0.1.99
+g2p-en>=2.1.0
+inflect>=6.0.0
+unidecode>=1.3.0
+nltk>=3.8.0
+jiwer>=3.0.0
+
+# ============================================================================
+# Data Processing
+# ============================================================================
+pyyaml>=6.0
+munch>=4.0.0
+pandas>=2.0.0
+numpy>=1.24.0
+scipy>=1.10.0
+matplotlib>=3.7.0
+
+# ============================================================================
+# Deep Learning Utilities
+# ============================================================================
+einops>=0.7.0
+einops-exts>=0.0.4
+rotary-embedding-torch>=0.3.0
+torch-stft>=0.1.4
+pytorch-wavelets>=1.3.0
+
+# ============================================================================
+# StyleTTS2-Specific
+# ============================================================================
+# monotonic_align from GitHub (PyPI version is incomplete)
+git+https://github.com/resemble-ai/monotonic_align.git
+
+# ============================================================================
+# Training & Monitoring
+# ============================================================================
+tensorboard>=2.14.0        # Optional but highly recommended for training monitoring
+click>=8.1.0
+tqdm>=4.65.0
+ipython>=8.12.0
+
+# ============================================================================
+# Web UI & Dataset Preparation
+# ============================================================================
+gradio>=4.0.0
+whisper>=1.0.0              # OpenAI Whisper for transcription
+openai-whisper>=20231117    # Alternative package name
+pydub>=0.25.1
+
+# ============================================================================
+# Utilities
+# ============================================================================
+typing-extensions>=4.5.0
+omegaconf>=2.3.0
+
+# ============================================================================
+# NOTES:
+# ============================================================================
+# 1. PyTorch CUDA Index URLs:
+#    - CUDA 12.4: https://download.pytorch.org/whl/cu124
+#    - CUDA 12.1: https://download.pytorch.org/whl/cu121
+#    - CUDA 11.8: https://download.pytorch.org/whl/cu118
+#    - CPU only: https://download.pytorch.org/whl/cpu
+#
+# 2. Installation Order:
+#    a) Install PyTorch with CUDA first
+#    b) Install this requirements file: pip install -r requirements.txt
+#    c) Verify installation: python -c "import torch; print(torch.cuda.is_available())"
+#
+# 3. Known Issues:
+#    - monotonic_align PyPI package is incomplete; use GitHub version
+#    - num2words is REQUIRED for transcript normalization
+#    - Windows requires num_workers=0 in DataLoader config
+#
+# 4. Security:
+#    - PyTorch 2.6.0+ required for CVE-2025-32434 fix in torch.load
+#    - Transformers 4.57.1+ enforces PyTorch 2.6+ requirement
+#
+# 5. Optional Dependencies:
+#    - tensorboard: Training visualization (highly recommended)
+#    - jupyter: For notebook-based experimentation
+#
+# For detailed installation instructions, see:
+# - docs/STYLETTS2_INSTALLATION.md
+# - docs/TROUBLESHOOTING.md

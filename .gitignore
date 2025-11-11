@@ -121,3 +121,16 @@ nltk_data/
 # Keep example files small
 examples/audio/
 examples/outputs/
+
+# Internal review/process documents (should not be in public repo)
+*REPORT*.md
+*REVIEW*.md
+*SUMMARY*.md
+*FIXES*.md
+*SETUP*.md
+*ASSESSMENT*.md
+*VERIFICATION*.md
+*READINESS*.md
+*CLEANUP*.md
+GITHUB_*.md
+REPOSITORY_SETUP_*.md

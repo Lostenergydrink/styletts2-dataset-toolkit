@@ -22,7 +22,7 @@ try {
 # Check CUDA
 Write-Host "Checking NVIDIA GPU..." -ForegroundColor Yellow
 try {
-    $nvidiaSmi = nvidia-smi 2>&1
+    $null = nvidia-smi 2>&1
     Write-Host "  GPU detected" -ForegroundColor Green
 } catch {
     Write-Host "  WARNING: nvidia-smi not found. GPU acceleration may not work." -ForegroundColor Yellow
